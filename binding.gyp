@@ -27,6 +27,17 @@
       "include_dirs": [
         "<!(node -e \"require('nan')\")"
       ]
+    },
+    {
+      "target_name": "action_after_build",
+      "type": "none",
+      "dependencies": [ "segfault-handler" ],
+      "copies": [
+        {
+          "files": [ "<(PRODUCT_DIR)/segfault-handler.node" ],
+          "destination": "./build"
+        }
+      ]
     }
   ]
 }

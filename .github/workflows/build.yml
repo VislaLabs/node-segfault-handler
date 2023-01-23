@@ -1,0 +1,62 @@
+name: Build
+on:
+  push: {}
+  pull_request: {}
+  workflow_dispatch: {}
+permissions: {}
+jobs:
+  build:
+    name: ${{ matrix.container || matrix.os }} - Node.js ${{ matrix.nodejs_version }} ${{ matrix.nodejs_arch }} ${{ matrix.prebuild && '- build' }}
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-18.04
+            nodejs_version: 12
+            nodejs_arch: x64
+          - os: ubuntu-22.04
+            nodejs_version: 14
+            nodejs_arch: x64
+          - os: ubuntu-22.04
+            nodejs_version: 16
+            nodejs_arch: x64
+          - os: macos-11
+            nodejs_version: 12
+            nodejs_arch: x64
+          - os: macos-11
+            nodejs_version: 14
+            nodejs_arch: x64
+          - os: macos-11
+            nodejs_version: 16
+            nodejs_arch: x64
+          - os: windows-2019
+            nodejs_version: 12
+            nodejs_arch: x64
+          - os: windows-2019
+            nodejs_version: 14
+            nodejs_arch: x64
+          - os: windows-2019
+            nodejs_version: 16
+            nodejs_arch: x64
+    steps:
+      - name: Dependencies (Python 3.10)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Dependencies (Node.js)
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs_version }}
+          architecture: ${{ matrix.nodejs_arch }}
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install
+        run: npm install --build-from-source --unsafe-perm
+      - name: Prebuild
+        env:
+          prebuild_upload: ${{ secrets.GITHUB_TOKEN }}
+        run: npx prebuild
