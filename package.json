@@ -16,13 +16,17 @@
   },
   "dependencies": {
     "bindings": "^1.2.1",
-    "nan": "^2.14.0"
+    "nan": "^2.14.0",
+    "prebuild-install": "^7.1.1"
   },
   "binary": {
     "module_name": "segfault-handler",
     "module_path": "./build",
     "remote_path": "./v{version}",
     "host": "https://github.com/VislaLabs/node-segfault-handler/releases/download"
+  },
+  "scripts": {
+    "install": "prebuild-install || node-gyp rebuild"
   },
   "main": "index.js",
   "types": "index.d.ts",
