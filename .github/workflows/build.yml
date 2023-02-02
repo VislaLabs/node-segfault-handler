@@ -59,4 +59,4 @@ jobs:
       - name: Prebuild
         env:
           prebuild_upload: ${{ secrets.GITHUB_TOKEN }}
-        run: npx prebuild
+        run: npx prebuild -t 8.5.2 -r electron
